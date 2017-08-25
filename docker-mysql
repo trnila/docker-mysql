@@ -4,8 +4,7 @@ action=$1
 container=$2
 
 print_help() {
-		echo "unknown action $action"
-		echo "Usage: container (mysql|import|export)"
+		echo "Usage: (mysql|import|export) container"
 		exit 1
 }
 
