@@ -1,0 +1,13 @@
+_docker_mysql() {
+	local cur=${COMP_WORDS[COMP_CWORD]}
+
+	if [[ "$COMP_CWORD" == 1 ]]; then
+		CMDS="import export mysql"
+		COMPREPLY=( $(compgen -W "$CMDS" -- $cur) )
+	elif [[ "$COMP_CWORD" == 2 ]]; then
+		CMDS=$(docker ps --format "{{ .Names }}")
+		COMPREPLY=( $(compgen -W "$CMDS" -- $cur) )
+	fi
+}
+
+complete -F _docker_mysql docker-mysql

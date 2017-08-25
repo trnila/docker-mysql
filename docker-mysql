@@ -1,0 +1,35 @@
+#!/bin/sh
+
+action=$1
+container=$2
+
+print_help() {
+		echo "unknown action $action"
+		echo "Usage: container (mysql|import|export)"
+		exit 1
+}
+
+if [ -z "$action" ]; then
+	print_help
+fi
+
+
+eval $(docker inspect -f '{{range $index, $value := .Config.Env}}export {{$value}}{{println}}{{end}}' "$container" | grep MYSQL)
+credentials="-u "$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE""
+
+case "$action" in
+	mysql)
+		docker exec -it $container mysql $credentials
+		;;
+	
+	import)
+		docker exec -i $container mysql $credentials
+		;;
+	
+	export)
+		docker exec -i $container mysqldump $credentials
+		;;
+	
+	*)
+		print_help
+esac
